@@ -1,0 +1,104 @@
+<!doctype html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" id="typeplate-css" href="../css/typeplate.css">
+<link rel="stylesheet" href="../css/demo.css">
+<link rel="stylesheet" href="../css/local.css">
+<meta name="author" content="Ahmed Fasih">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
+<title>Ahmed Fasih</title>
+<style>
+.plotorange {
+  color: #de935f;
+}
+.plotblue {
+  color: #81a2be;
+}
+.plotgreen {
+  color: #b5bd68;
+}
+</style>
+</head>
+
+<body>
+<section role="main">
+<article role="article">
+
+<p><a href="../index.html">(back to main)</a></p>
+
+<header>
+	<h1 class="typl8-beta">Sample random points on a sphere inside specific cones</h1>
+  <h2><small>An interactive document by <cite>Ahmed Fasih</cite></small></h2>
+
+</header>
+
+
+<p class="typl8-delta lede">
+There’s a very <em>wrong</em> way to pick random points on the unit sphere, but also many right ways. But what if you need points on the sphere that are within some angle of some pointing vector?</p>
+
+<p class="typl8-drop-cap">
+  That is, imagine a unit sphere (in three-dimensions, centered at the origin with radius 1). Imagine a cone with the tip at the origin and body pointing towards a specific point on the sphere, and with a specific pointy-ness (angle of the cone). This cone’s intersection with the sphere will be a circle and you want to sample random points on the sphere that are within that circle.
+</p>
+
+<p>Pedro77 was looking for improvements to their perfectly acceptable approach (<a href="http://stackoverflow.com/q/38997302/500207">StackOverflow</a>), which was to pick random points on the entire sphere (correctly! see <a href="http://mathworld.wolfram.com/SpherePointPicking.html">MathWorld</a>) and throw them away if they didn’t meet the criteria. This rejection sampling is inefficient for small angles, when it has to throw away most samples.</p>
+
+<p><a href="http://stackoverflow.com/a/39003745/500207">My answer</a> contains a Matlab function to do this a bit more efficiently. Instead of a cone, it phrases the problem in terms of an aim point, or a pointing vector as mentioned above, and an angle—cones are a little ungainly for angles greater than 180°.</p>
+
+<p>A story that’s irrelevant to the math or code, but that perhaps shows the unexpected routes we take to mathematical or programming solutions. A mathematical solution didn’t make itself apparent after a few seconds of thinking, so I sought to find the name of this cone–sphere intersection. That might help me search for solutions. I thanked today’s powerful search engines as one led me to Mathworld’s <a href="http://mathworld.wolfram.com/SphericalCap.html">“Spherical Cap”</a> entry. A picture is worth a thousand words: </p>
+
+<figure>
+	<img src="cap.jpg" alt="Spherical cap, via Mathworld">
+<figcaption>
+  <small>A spherical cap, ladies and gentlemen.</small>
+</figcaption>
+</figure>
+
+<p>Knowing I wanted to randomly sample from a specific spherical cap readily led to, where else, Math.StackExchange (the StackOverflow for mathematicians). Between <a href="http://math.stackexchange.com/a/44691/81266">Jim Belk</a> and <a href="http://math.stackexchange.com/a/205589/81266">joriki’s</a> fine answers, the problem became writing the implementation.
+</p>
+
+<p>I wound up making an ES2015 JavaScript module to sample from arbitrary spherical caps (<a href="https://github.com/fasiha/sphere-cap-random">GitHub</a>) so you, kind reader, could visualize random samples from a few spherical caps here, in your browser, without needing Matlab or Octave or any of that.</p>
+
+<figure>
+	<div id="divPlot"></div>
+<figcaption>
+  <small>Three spherical caps.</small>
+</figcaption>
+</figure>
+
+<p>The interactive 3D scatter plot above (for desktop browsers), courtesy of <a href="https://plot.ly/javascript/3d-scatter-plots/">plotly.js</a>, shows random samples from three spherical caps:
+<ul>
+  <li>the 30° spherical cap at the North Pole in <span class="plotblue">blue</span>,</li>
+  <li>the 30° spherical cap pointing towards the middle of the first octant, pointing at [1, 1, 1], in <span class="plotorange">orange</span>, and</li>
+  <li>the 110° spherical cap, which looks like a Dymaxion dome, at the South Pole, in <span class="plotgreen">green</span>.</li>
+</ul>
+I have the same demo in a <a href="http://bl.ocks.org/fasiha/2bbfc20ef882d76e27f17df31950d156">bl.ock</a> (<a href="http://bl.ocks.org/">bl.ocks.org</a> is Mike Bostock’s beautiful HTML/JavaScript playground).
+</p>
+
+<p>It was very pleasant to use bl.ocks for the first time. It was unpleasant but educational to write an ES2015 module with Rollup and Babel—ClojureScript and the Google Closure Compiler shielded me from all that, so I felt like a real 2016 Web Developer:
+</p>
+
+<figure>
+	<img src="exasp.jpg" alt="Exasperated cat">
+  <figcaption>
+    <small>A ClojureScript developer does an ES2015 module with Rollup.</small>
+  </figcaption>
+</figure>
+
+<p>But the most <em>fun</em> part of the little exercise was <a href="http://scijs.net/packages/">scijs</a> written by Mikola Lysenko and Ricky Reusser and friends. It’s a high-performance ecosystem for JavaScript numerics with some very powerful abstractions but also very little syntactic sugar. This last sentence had a number of unexpected clauses that one usually doesn’t together. Working with scijs was fun but challenging. For a taste of coding in it, see the <a href="https://github.com/fasiha/sphere-cap-random/blob/gh-pages/src/capRandom.js">source code for sphere-cap-random</a>.</p>
+
+<h2 class="typl8-beta">Links</h2>
+<ul>
+  <li><a href="http://stackoverflow.com/a/39003745/500207">Matlab code and analysis of statistical properties at StackOverflow</a></li>
+  <li><a href="https://github.com/fasiha/personal-matlab-namespace/blob/master/%2Barf/randSphericalCap.m">Heavily-documented Matlab function on GitHub</a></li>
+  <li><a href="https://github.com/fasiha/sphere-cap-random">sphere-cap-random, the JavaScript implementation on GitHub</a></li>
+  <li><a href="http://bl.ocks.org/fasiha/2bbfc20ef882d76e27f17df31950d156">the above demo as a bl.ock</a></li>
+</ul>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="cap-random.min.js"></script>
+<script src="demo.js"></script>
+
+
+</article>
+</section>
+</body>
