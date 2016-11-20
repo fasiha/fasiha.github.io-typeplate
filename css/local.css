@@ -17,3 +17,5 @@ a {
     color: #99cc99;
     text-decoration: none;
 }
+ol.georgian { list-style-type: georgian; }
+ol.iroha { list-style-type: hiragana-iroha; }
