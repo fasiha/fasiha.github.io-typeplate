@@ -1,0 +1,108 @@
+<!doctype html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" id="typeplate-css" href="../css/typeplate.css">
+<link rel="stylesheet" href="../css/demo.css">
+<link rel="stylesheet" href="../css/local.css">
+<meta name="author" content="Ahmed Fasih">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
+<title>Ahmed Fasih</title>
+<style>
+.plotorange {
+  color: #de935f;
+}
+.plotblue {
+  color: #81a2be;
+}
+.plotgreen {
+  color: #b5bd68;
+}
+</style>
+</head>
+
+<body>
+<section role="main">
+<article role="article">
+
+<p><a href="../index.html">(back to main)</a></p>
+
+<header>
+	<h1 class="typl8-beta">Random points on a spherical cap</h1>
+  <h2><small>A note by <cite>Ahmed Fasih</cite> <small>2016/11/19</small></small></h2>
+</header>
+
+
+<p class="typl8-delta lede">
+How do you sample random points in a spherical cap? How do you randomly pick a direction inside a 3D cone, whose tip is at the origin? How do you get randomly latitude–longitude pairs that are within some distance of a given latitude and longitude? These are all one and the same question!</p>
+
+<p class="typl8-drop-cap">
+Sampling points on a unit sphere (in three dimensions, centered at the origin with radius 1) is a little tricky: anyone who tried to do this by drawing uniformly random latitudes between ±90° and longitudes between ±180° can be forgiven for it, but this is the wrong way to do it. A glance at the visualizations by <a href="http://mathworld.wolfram.com/SpherePointPicking.html">MathWorld</a>, D3.js–guru <a href="https://www.jasondavies.com/maps/random-points/">Jason Davies</a>, or <a href="http://nullprogram.com/sphere-js/">Chris Wellons</a> shows that this bunches points near the poles:
+
+<figure>
+	<img src="wellons.png" alt="The wrong way to sample points on a sphere, via Chris Wellons">
+<figcaption>
+  <small>You don’t want to see this. Courtesy of Chris Wellons.</small>
+</figcaption>
+</figure>
+</p>
+
+<p>Luckily there are many right ways to sample points from the unit sphere (<a href="http://mathworld.wolfram.com/SpherePointPicking.html">MathWorld</a> has your back). However, Pedro77 needed something a little different when asking their question on <a href="http://stackoverflow.com/q/38997302/500207">StackOverflow</a>: they needed random points on a unit sphere that lay <em>inside a cone</em>, with tip at the origin and oriented in a particular direction, towards some (latitude, longitude) pair on the sphere. They were generating random points on the entire sphere and discarding points that failed to meet this criterion, and wanted to know if there was a better way. Rejection sampling is perfectly correct, but can be inefficient for small angles, when it has to throw away most samples.</p>
+
+<p>I tried intuiting a mathematical solution for a few minutes in vain, then sought to find the name of this cone–sphere intersection—maybe knowing what it’s called would aid searching. Google quickly sent me to Mathworld’s <a href="http://mathworld.wolfram.com/SphericalCap.html">“Spherical Cap”</a> entry. A picture is worth a thousand words:
+  <figure>
+  	<img src="cap.jpg" alt="Spherical cap, via Mathworld">
+  <figcaption>
+    <small>A spherical cap, ladies and gentlemen.</small>
+  </figcaption>
+  </figure>
+</p>
+
+
+<p>Knowing what to search for, in this case, meant all the world. Between <a href="http://math.stackexchange.com/a/44691/81266">Jim Belk</a> and <a href="http://math.stackexchange.com/a/205589/81266">joriki’s</a> fine answers on—where else—Math.StackExchange (StackOverflow’s sister site for mathematicians), the problem reduced to converting mathematical pseudocode to Matlab code. My <a href="http://stackoverflow.com/a/39003745/500207">answer</a> as well as my personal Matlab toolkit (<a href="https://github.com/fasiha/personal-matlab-namespace/blob/master/%2Barf/randSphericalCap.m">GitHub</a>), contains that public-domain Matlab code.
+</p>
+
+<p>I wanted you, kind reader, to visualize spherical caps just as you are, since you are likely reading these words on a programmable device in a programmable browser, so I wound up making the <a href="https://github.com/fasiha/sphere-cap-random"><code>sphere-cap-random</code></a> project, an ES2015 JavaScript module to sample from arbitrary spherical caps:
+  <figure>
+  	<div id="divPlot"></div>
+  <figcaption>
+    <small>Three spherical caps. Without WebGL, you will see nothing above—<a href="animation.gif">click here for an animated GIF</a>.</small>
+  </figcaption>
+  </figure>
+</p>
+
+<p>The interactive 3D scatter plot above, courtesy of <a href="https://plot.ly/javascript/3d-scatter-plots/">plotly.js</a>, shows random samples from three spherical caps:
+<ul>
+  <li>the 30° spherical cap at the North Pole in <span class="plotblue">blue</span>,</li>
+  <li>the 30° spherical cap pointing towards the middle of the first octant, pointing at [1, 1, 1], in <span class="plotorange">orange</span>, and</li>
+  <li>the 110° spherical cap, which looks like a Dymaxion dome, at the South Pole, in <span class="plotgreen">green</span>.</li>
+</ul>
+I have the same demo in a <a href="http://bl.ocks.org/fasiha/2bbfc20ef882d76e27f17df31950d156">bl.ock</a> (<a href="http://bl.ocks.org/">bl.ocks.org</a> is Mike Bostock’s beautiful HTML/JavaScript playground).
+</p>
+
+<p>It was very pleasant to use bl.ocks for the first time. It was unpleasant but educational to write an ES2015 module with Rollup and Babel—ClojureScript and the Google Closure Compiler shielded me from all that, so I felt like a real 2016 Web Developer:
+  <figure>
+  	<img src="exasp.jpg" alt="Exasperated cat">
+    <figcaption>
+      <small>A ClojureScript developer does an ES2015 module with Rollup.</small>
+    </figcaption>
+  </figure>
+</p>
+
+<p>But the most <em>fun</em> part of the little exercise was <a href="http://scijs.net/packages/">scijs</a> written by Mikola Lysenko and Ricky Reusser and friends. It’s a high-performance ecosystem for JavaScript numerics with some very powerful abstractions but also very little syntactic sugar. This last sentence had a number of unexpected clauses that one usually doesn’t together. Working with scijs was fun but challenging. For a taste of coding in it, see the <a href="https://github.com/fasiha/sphere-cap-random/blob/gh-pages/src/capRandom.js">source code for sphere-cap-random</a>.</p>
+
+<h2 class="typl8-beta">Links</h2>
+<ul>
+  <li><a href="http://stackoverflow.com/a/39003745/500207">Matlab code and analysis of statistical properties at StackOverflow</a></li>
+  <li><a href="https://github.com/fasiha/personal-matlab-namespace/blob/master/%2Barf/randSphericalCap.m">Heavily-documented Matlab function on GitHub</a></li>
+  <li><a href="https://github.com/fasiha/sphere-cap-random">sphere-cap-random, the JavaScript implementation on GitHub</a></li>
+  <li><a href="http://bl.ocks.org/fasiha/2bbfc20ef882d76e27f17df31950d156">the above demo as a bl.ock</a></li>
+</ul>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="cap-random.min.js"></script>
+<script src="demo.js"></script>
+
+
+</article>
+</section>
+</body>
