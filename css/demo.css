@@ -7,13 +7,11 @@
 body {
   margin: 6em auto;
   max-width: 34em;
-  background: url(../img/subtle_grunge.png) top left repeat; }
   .wf-loading body {
     font-family: serif;
     visibility: hidden; }
   .wf-active body,
   .wf-inactive body {
-    font-family: "ff-meta-serif-web-pro",serif;
     font-weight: 400;
     visibility: visible; }
 
