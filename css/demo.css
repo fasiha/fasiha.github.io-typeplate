@@ -7,13 +7,17 @@
 body {
   margin: 6em auto;
   max-width: 34em;
-  .wf-loading body {
-    font-family: serif;
-    visibility: hidden; }
-  .wf-active body,
-  .wf-inactive body {
-    font-weight: 400;
-    visibility: visible; }
+}
+.wf-loading body {
+   font-family: serif;
+   visibility: hidden;
+ }
+.wf-active body,
+.wf-inactive body {
+  font-family: "Charter",serif;
+  font-weight: 400;
+  visibility: visible;
+}
 
 img {
   max-width: 100%; }
