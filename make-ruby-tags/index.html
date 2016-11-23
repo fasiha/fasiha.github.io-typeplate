@@ -1,0 +1,84 @@
+<!doctype html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Ahmed Fasih">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
+<title>Make Ruby HTML tags</title>
+<link rel="stylesheet" id="typeplate-css" href="../css/typeplate.css">
+<link rel="stylesheet" href="../css/demo.css">
+<link rel="stylesheet" href="../css/local.css">
+</head>
+
+<body>
+<article role="article">
+
+<p><a href="../index.html">(back to main)</a></p>
+
+<header>
+	<h1 class="typl8-beta">Make Ruby HTML tags</h1>
+  <h2><small>A tool by <cite>Ahmed Fasih</cite> <small>2016/10/13</small></small></h2>
+</header>
+
+<p >
+I <ruby>😍<rt>love</rt></ruby> Ruby but I can <em>never</em> keep the HTML tag straight. With this tiny app, I never have to.
+</p>
+
+<script>
+function makeRubyString(base, ruby, left, right) {
+  return '<ruby>' + base +
+         (left && right ? '<rp>' + left + '</rp>' : '') +
+         '<rt>' + ruby + '</rt>' +
+         (left && right ? '<rp>' + right + '</rp>' : '') +
+         '</ruby>';
+}
+function process() {
+  const base = document.getElementById('base').value;
+  const ruby = document.getElementById('ruby').value;
+  const left = document.getElementById('left').value;
+  const right = document.getElementById('right').value;
+  const result = makeRubyString(base, ruby, left, right);
+  document.getElementById('code-out').innerText = result;
+  document.getElementById('out').innerHTML = result;
+}
+</script>
+
+<h2 class="typl8-gamma">Base text</h2>
+<input oninput="process()" placeholder="学生" type="text" id="base">
+
+<h2 class="typl8-gamma">Ruby text (annotation)</h2>
+<input oninput="process()" placeholder="がくせい" type="text" id="ruby">
+
+<h2 class="typl8-gamma">Optional: parentheses</h2>
+<input oninput="process()" placeholder="[" type="text" id="left">
+<input oninput="process()" placeholder="]" type="text" id="right">
+
+<h2 class="typl8-gamma">Result</h2>
+<figure>
+  <div>
+    <code id="code-out"></code>
+  </div>
+</figure>
+
+<p id="out"></div>
+
+<h2 class="typl8-gamma">Usage</h2>
+<p>Type in something into the first two boxes above. Copy the HTML markup that appears above and paste it into your HTML or Markdown. Reap the rewards.</p>
+
+<h2 class="typl8-gamma">Wat?</h2>
+<p>You know, Ruby tags!
+<ul>
+ <li>
+   Use them when speaking to your hip neighbors: “The new Drake album is <ruby>🔥<rt>fire</rt></ruby>!”
+ </li>
+ <li>
+   Use it when discussing memes like <a href="https://twitter.com/kosamari/status/743473313184419845">@kosamari</a>: <ruby>¯\_(ツ)_/¯<rt>wat can i say ?</rt></ruby>.
+ </li>
+ <li>
+   And of course use it when talking about kanji people might not know about: <ruby>天下<rt>てんか</rt>布武<rt>ふぶ</rt></ruby>.
+ </li>
+</ul>
+Supported <a href="http://caniuse.com/#feat=ruby">everywhere</a> including Markdown. See <a href="http://www.w3schools.com/tags/tag_ruby.asp">W3schools</a> and <a href="http://html5doctor.com/ruby-rt-rp-element/">HTML5 Doctor</a> for the stodgy details.
+</p>
+
+</article>
+</body>
